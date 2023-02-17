@@ -28,3 +28,7 @@ def plot_population_variables(counts: Union[numpy.ndarray, List[float], List[Lis
     time_data = range(0, counts.shape[1])
     for count in counts:
         ax.plot(time_data, count)
+
+
+def show_plot():
+    plt.show()

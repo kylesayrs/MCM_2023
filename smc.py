@@ -3,7 +3,7 @@ from typing import Union, List
 import numpy
 
 
-class StochasticMarkovChain():
+class StochasticMarkovChain:
     def __init__(
         self,
         initial_state: Union[str, int],
@@ -19,21 +19,27 @@ class StochasticMarkovChain():
         assert numpy.all(numpy.sum(transitions, axis=1) == 1.0)
 
         self.state_index = self.initial_state_index
+        self.new_value = None
 
 
     def step(self):
         choice_probabilities = self.transitions[self.state_index].tolist()[0]
-        self.state_index = numpy.random.choice(
+        self.new_value = numpy.random.choice(
             range(0, len(self.state_names)),
             p=choice_probabilities
         )
-        return self.state_index
+        return self.new_value
+
+
+    def update(self):
+        self.state_index = self.new_value
+        self.new_value = None
 
 
     @property
     def one_hot(self):
-        array = numpy.zeros()
-        array[self.state_index] = 0
+        array = numpy.zeros(len(self.state_names))
+        array[self.state_index] = 1
         return array
 
 

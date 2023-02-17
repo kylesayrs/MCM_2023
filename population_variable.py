@@ -1,14 +1,21 @@
-from typing import Callable
+from typing import Optional, Callable
 
 
-class PopulationVariable():
-    def __init__(self, name: str, value: float, dy_func: Callable):
+class PopulationVariable:
+    def __init__(self, name: str, value: float, ddt: Callable):
         self.name = name
         self.value = value
-        self.dy_func = dy_func
+        self.ddt = ddt
+
+        self.new_value = None
 
 
     def step(self):
-        self.value += self.dy_func()
-        return self.value
+        self.new_value = self.value + self.ddt()
+        return self.new_value
+
+
+    def update(self):
+        self.value = self.new_value
+        self.new_value = None
 
