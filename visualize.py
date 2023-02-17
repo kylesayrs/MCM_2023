@@ -12,22 +12,20 @@ def sanitize_2d_numpy(array_input):
     return array
 
 
-def plot_values(counts: Union[numpy.ndarray, List[float], List[List[float]]]):
+def plot_values(time, counts: Union[numpy.ndarray, List[float], List[List[float]]]):
     counts = sanitize_2d_numpy(counts)
     fig, ax = plt.subplots(1, 1)
 
-    time_data = range(0, counts.shape[1])
     for count in counts:
-        ax.plot(time_data, count)
+        ax.plot(time, count)
 
 
-def plot_population_variables(counts: Union[numpy.ndarray, List[float], List[List[float]]]):
+def plot_population_variables(time, counts: Union[numpy.ndarray, List[float], List[List[float]]]):
     counts = sanitize_2d_numpy(counts)
     fig, ax = plt.subplots(1, 1)
 
-    time_data = range(0, counts.shape[1])
     for count in counts:
-        ax.plot(time_data, count)
+        ax.plot(time, count)
 
 
 def show_plot():

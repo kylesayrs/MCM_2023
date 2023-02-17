@@ -10,8 +10,8 @@ class PopulationVariable:
         self.new_value = None
 
 
-    def step(self):
-        self.new_value = self.value + self.ddt()
+    def step(self, h: Optional[float] = 1.0):
+        self.new_value = self.value + (h * self.ddt())
         return self.new_value
 
 

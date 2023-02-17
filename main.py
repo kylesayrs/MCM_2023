@@ -32,7 +32,7 @@ if __name__ == "__main__":
             lambda: (
                 1.0 +
                 0.001 * population.value +
-                numpy.array([-1.0, 2.0]) @ weather.one_hot
+                numpy.array([-1.5, 2.0]) @ weather.one_hot
             )
         )
         population_variables[population.name] = population
@@ -41,12 +41,17 @@ if __name__ == "__main__":
     simulation = Simulation(
         environment_variables=environment_variables,
         population_variables=population_variables,
+        simulation_h=10,
     )
 
     # run simulation
-    simulation.run(1000)
+    simulation.run(max_time=1000)
 
     # visualize
+    plot_values(simulation.time_history, simulation.environment_history["weather"])
+    show_plot()
+
+    time_history = simulation.time_history
     first_plant_history = list(simulation.population_history.values())[0]
-    plot_population_variables(first_plant_history)
+    plot_population_variables(simulation.time_history, first_plant_history)
     show_plot()
