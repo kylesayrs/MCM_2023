@@ -45,11 +45,14 @@ def plot_population_time(
     for drought_state, spans in drought_spans.items():
         color = drought_state_to_color[drought_state]
         for span in spans:
-            axes[1].axvspan(*span, color=color, alpha=0.3)
+            axes[0].axvspan(*span, color=color, alpha=0.1)
+            axes[1].axvspan(*span, color=color, alpha=0.1)
 
     # plot settings
-    axes[1].set_xbound(lower=0)
-    axes[1].set_ybound(lower=0)
+    axes[0].set_xbound(0, time_history[-1])
+    axes[0].set_ybound(0)
+    axes[1].set_xbound(0, time_history[-1])
+    axes[1].set_ybound(0)
     axes[1].legend()
 
 
