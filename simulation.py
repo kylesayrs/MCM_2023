@@ -43,10 +43,7 @@ class Simulation:
 
         # create population variables
         population_variables = make_plant_population_variables(
-            config.num_species,
-            config.initial,
-            config.growth,
-            config.interactions,
+            config,
             environment_variables,
         )
 

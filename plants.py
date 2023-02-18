@@ -2,8 +2,25 @@ from typing import List, Dict, Any, Optional
 
 import numpy
 
+from config import Config
 from smc import StochasticMarkovChain
 from population_variable import PopulationVariable
+
+
+def plant_ddt(_config, _variable_i, _variables, _environment_variables):
+    variables_values = numpy.array([var.value for var in _variables.values()])
+    self_value = variables_values[_variable_i]
+
+    normal_ddt = (
+        _config.growth[_variable_i] * self_value +
+        (
+            _config.interactions[_variable_i] @
+            variables_values *
+            self_value
+        )
+    )
+
+    return normal_ddt
 
 
 def make_plant_environment_variables(
@@ -23,36 +40,23 @@ def make_plant_environment_variables(
 
 
 def make_plant_population_variables(
-        num_plants: int,
-        initial: numpy.ndarray,
-        growth: numpy.ndarray,
-        interactions: numpy.ndarray,
+        config: Config,
         environment_variables: Dict[str, Any],
 ):
     # initialize variables
     variables = {
         f"plant_{plant_i}": PopulationVariable(f"plant_{plant_i}", initial_i)
-        for plant_i, initial_i in zip(range(num_plants), initial)
+        for plant_i, initial_i in zip(range(config.num_plants), config.initial)
     }
-
-    # deep copy arguments for lambda closure
-    _growth = growth.copy()
-    _interactions = interactions.copy()
 
     # define derivative equations (variables is mutable)
     for variable_i, variable in enumerate(variables.values()):
-        variable.ddt = (
-            lambda _variable_i=variable_i, _variable=variable:
-            _growth[_variable_i] * _variable.value +
-            (
-                _interactions[_variable_i] @
-                numpy.array([var.value for var in variables.values()]) *
-                _variable.value
-            ) +
-            (
-                numpy.array([0.0, 0.0])
-            )
-            @ environment_variables["drought"].one_hot
-        )
+        def _lambda_closure(
+            _config=config.copy(),
+            _variable_i=variable_i,
+        ):
+            return plant_ddt(_config, _variable_i, variables, environment_variables)
+
+        variable.ddt = _lambda_closure
 
     return variables
