@@ -15,8 +15,10 @@ if __name__ == "__main__":
     # create population variables
     initial = numpy.array([7.0, 6.0])
     growth = numpy.array([4.0, 3.0])
-    interactions = numpy.array([[0.0, -2.0],
-                                [-1.0, 0.0]])
+    damping = -0.001
+    interactions = numpy.array([[None, -2.0],
+                                [-1.0, None]])
+    numpy.fill_diagonal(interactions, damping)
     populations = make_plant_population_variables(2, initial, growth, interactions)
 
     # create simulation
