@@ -20,7 +20,32 @@ def plant_ddt(_config, _variable_i, _variables, _environment_variables):
         )
     )
 
-    return normal_ddt
+    if _environment_variables["drought"].state_name == "none":
+        return normal_ddt
+
+    if _environment_variables["drought"].state_name == "mild":
+        mild_ddt = (
+            _config.mild_growth_effect[_variable_i] * self_value +
+            (
+                _config.mild_interactions_effect[_variable_i] @
+                variables_values *
+                self_value
+            )
+        )
+
+        return normal_ddt + mild_ddt
+
+    if _environment_variables["drought"].state_name == "severe":
+        severe_ddt = (
+            _config.severe_growth_effect[_variable_i] * self_value +
+            (
+                _config.severe_interactions_effect[_variable_i] @
+                variables_values *
+                self_value
+            )
+        )
+
+        return normal_ddt + severe_ddt
 
 
 def make_plant_environment_variables(

@@ -46,10 +46,14 @@ class StochasticMarkovChain:
 
 
     @property
+    def state_name(self):
+        return self.state_names[self.state_index]
+
+
+    @property
     def value(self):
-        return self.state_index
+        return self.state_name
 
 
     def __str__(self):
-        state_name = self.state_names[self.state_index]
-        return f"StochasticMarkovChain(state={state_name}, states={self.state_names})"
+        return f"StochasticMarkovChain(state={self.state_name}, states={self.state_names})"
