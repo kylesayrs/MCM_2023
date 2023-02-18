@@ -2,6 +2,12 @@ import numpy
 
 
 class BaseConfig:
+    # environment arguments
+    drought_state = 0
+    drought_names = ["no drought", "drought"]
+    drought_transitions = numpy.array([[0.95, 0.05],
+                                       [0.1, 0.9]])
+
     # population arguments
     num_species = 2
     initial = numpy.array([7.0, 6.0])
@@ -17,6 +23,10 @@ class BaseConfig:
     def __init__(self):
         numpy.fill_diagonal(self.interactions, self.damping)
 
+        self.check_arguments()
+
+
+    def check_arguments(self):
         assert (
             self.num_species ==
             self.initial.shape[0] ==

@@ -8,14 +8,14 @@ class StochasticMarkovChain:
         self,
         initial_state: Union[str, int],
         state_names: List[str],
-        transitions: Union[List[List[float]], numpy.matrix],
+        transitions: Union[List[List[float]], numpy.ndarray],
     ):
         if type(initial_state) == str:
             self.initial_state_index = state_names.index(initial_state)
         if type(initial_state) == int:
             self.initial_state_index = initial_state
         self.state_names = state_names
-        self.transitions = numpy.matrix(transitions)
+        self.transitions = numpy.array(transitions)
         assert numpy.all(numpy.sum(transitions, axis=1) == 1.0)
 
         self.state_index = self.initial_state_index
@@ -23,7 +23,7 @@ class StochasticMarkovChain:
 
 
     def step(self):
-        choice_probabilities = self.transitions[self.state_index].tolist()[0]
+        choice_probabilities = self.transitions[self.state_index]
         self.new_value = numpy.random.choice(
             range(0, len(self.state_names)),
             p=choice_probabilities

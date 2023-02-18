@@ -1,8 +1,6 @@
-import numpy
-
 from config import BaseConfig
 from simulation import Simulation
-from population_variable import make_plant_population_variables
+from plants import make_plant_environment_variables, make_plant_population_variables
 from visualize import plot_population_time, plot_population, show_plot
 
 
@@ -10,18 +8,26 @@ if __name__ == "__main__":
     # set up configuration
     config = BaseConfig()
 
+    # environment variables
+    environment_variables = make_plant_environment_variables(
+        config.drought_state,
+        config.drought_names,
+        config.drought_transitions,
+    )
+
     # create population variables
-    populations = make_plant_population_variables(
+    population_variables = make_plant_population_variables(
         config.num_species,
         config.initial,
         config.growth,
         config.interactions,
+        environment_variables,
     )
 
     # create simulation
     simulation = Simulation(
-        environment_variables={},
-        population_variables=populations,
+        environment_variables=environment_variables,
+        population_variables=population_variables,
         simulation_h=config.simulation_h,
     )
 
