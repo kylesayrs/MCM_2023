@@ -25,11 +25,17 @@ def plot_population_time(
     axes: Optional[plt.Axes] = None
 ):
     if axes is None:
-        _, axes = plt.subplots(1, 1)
+        _, axes = plt.subplots(2, 1, height_ratios=[1, 3])
 
+    # total plant history
+    total_population_history = numpy.sum(list(population_history.values()), axis=0)
+    axes[0].plot(time_history, total_population_history, label="total population")
+
+    # individual plant history
     for name, history in population_history.items():
-        axes.plot(time_history, history, label=name)
+        axes[1].plot(time_history, history, label=name)
 
+    # drought
     drought_state_to_color = {
         "none": "grey",
         "mild": "yellow",
@@ -39,11 +45,12 @@ def plot_population_time(
     for drought_state, spans in drought_spans.items():
         color = drought_state_to_color[drought_state]
         for span in spans:
-            axes.axvspan(*span, color=color, alpha=0.3)
+            axes[1].axvspan(*span, color=color, alpha=0.3)
 
-    axes.set_xbound(lower=0)
-    axes.set_ybound(lower=0)
-    axes.legend()
+    # plot settings
+    axes[1].set_xbound(lower=0)
+    axes[1].set_ybound(lower=0)
+    axes[1].legend()
 
 
 def plot_population(
