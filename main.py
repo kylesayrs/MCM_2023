@@ -4,7 +4,7 @@ from config import BaseConfig
 from simulation import Simulation
 from smc import StochasticMarkovChain
 from population_variable import PopulationVariable
-from visualize import plot_values, plot_population_variables, show_plot
+from visualize import plot_values, plot_population_time, plot_population, show_plot
 
 
 if __name__ == "__main__":
@@ -13,45 +13,41 @@ if __name__ == "__main__":
     config.seed = 42
     numpy.random.seed(config.seed)
 
-    # create environment variables
-    environment_variables = {}
-    weather = StochasticMarkovChain(
-        "sunny",
-        ["rainy", "sunny"],
-        [[0.9, 0.1],
-         [0.5, 0.5]]
-    )
-    environment_variables["weather"] = weather
-
     # create population variables
     population_variables = {}
-    for plant_i in range(0, 1):
-        population = PopulationVariable(
-            f"plant_{plant_i}",
-            0.0,
-            lambda: (
-                1.0 +
-                0.001 * population.value +
-                numpy.array([-1.5, 2.0]) @ weather.one_hot
-            )
-        )
-        population_variables[population.name] = population
+    population_variables["plant_x"] = PopulationVariable(f"plant_x", 30.0)
+    population_variables["plant_y"] = PopulationVariable(f"plant_y", 30.0)
+
+    population_variables["plant_x"].ddt = (
+        lambda:
+        0.3 * population_variables["plant_x"].value +
+        (numpy.array([0, -0.01]) @ numpy.array([var.value for var in population_variables.values()])) * population_variables["plant_x"].value
+    )
+    population_variables["plant_y"].ddt = (
+        lambda:
+        0.05 * population_variables["plant_y"].value +
+        (numpy.array([0.01, 0]) @ numpy.array([var.value for var in population_variables.values()])) * population_variables["plant_y"].value
+    )
 
     # create simulation
     simulation = Simulation(
-        environment_variables=environment_variables,
+        environment_variables={},
         population_variables=population_variables,
-        simulation_h=10,
+        simulation_h=0.1,
     )
 
     # run simulation
-    simulation.run(max_time=1000)
+    simulation.run(max_time=10)
 
     # visualize
-    plot_values(simulation.time_history, simulation.environment_history["weather"])
+    plot_population_time(
+        simulation.time_history,
+        simulation.population_history
+    )
     show_plot()
-
-    time_history = simulation.time_history
-    first_plant_history = list(simulation.population_history.values())[0]
-    plot_population_variables(simulation.time_history, first_plant_history)
+    plot_population(
+        simulation.time_history,
+        simulation.population_history,
+        "plant_x", "plant_y"
+    )
     show_plot()
