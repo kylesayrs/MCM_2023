@@ -2,9 +2,8 @@ import numpy
 
 from config import BaseConfig
 from simulation import Simulation
-from smc import StochasticMarkovChain
-from population_variable import PopulationVariable
-from visualize import plot_values, plot_population_time, plot_population, show_plot
+from population_variable import make_plant_population_variables
+from visualize import plot_population_time, plot_population, show_plot
 
 
 if __name__ == "__main__":
@@ -14,21 +13,10 @@ if __name__ == "__main__":
     numpy.random.seed(config.seed)
 
     # create population variables
-    populations = {
-        "plant_x": PopulationVariable(f"plant_x", 1.0),
-        "plant_y": PopulationVariable(f"plant_y", 1.0)
-    }
-
-    populations["plant_x"].ddt = (
-        lambda:
-        4.0 * populations["plant_x"].value +
-        (numpy.array([0, -2.0]) @ numpy.array([var.value for var in populations.values()])) * populations["plant_x"].value
-    )
-    populations["plant_y"].ddt = (
-        lambda:
-        -3.0 * populations["plant_y"].value +
-        (numpy.array([1.0, 0]) @ numpy.array([var.value for var in populations.values()])) * populations["plant_y"].value
-    )
+    initial = numpy.array([1.0, 1.0])
+    growth = numpy.array([4.0, -3.0])
+    interactions = numpy.array([[0.0, -2.0], [1.0, 0.0]])
+    populations = make_plant_population_variables(2, initial, growth, interactions)
 
     # create simulation
     simulation = Simulation(
@@ -48,7 +36,7 @@ if __name__ == "__main__":
     show_plot()
     plot_population(
         simulation.population_history,
-        "plant_x", "plant_y",
-        reduce_factor=1000
+        "plant_0", "plant_1",
+        reduce_factor=10
     )
     show_plot()
