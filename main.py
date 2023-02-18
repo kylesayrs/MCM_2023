@@ -9,8 +9,6 @@ from visualize import plot_population_time, plot_population, show_plot
 if __name__ == "__main__":
     # set up configuration
     config = BaseConfig()
-    config.seed = 42
-    numpy.random.seed(config.seed)
 
     # create population variables
     populations = make_plant_population_variables(
