@@ -1,6 +1,6 @@
 from typing import List, Dict, Any, Optional
 
-from config import BaseConfig
+from config import Config
 from population_variable import PopulationVariable
 from smc import StochasticMarkovChain
 from plants import make_plant_environment_variables, make_plant_population_variables
@@ -32,7 +32,7 @@ class Simulation:
 
 
     @classmethod
-    def from_config(cls, config: BaseConfig):
+    def from_config(cls, config: Config):
         # environment variables
         environment_variables = make_plant_environment_variables(
             config.drought_state,

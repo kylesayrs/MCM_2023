@@ -50,7 +50,7 @@ def make_plant_population_variables(
                 _variable.value
             ) +
             (
-                numpy.array([0.0, -1000])
+                numpy.array([0.0, 0.0])
             )
             @ environment_variables["drought"].one_hot
         )

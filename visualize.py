@@ -1,4 +1,4 @@
-from typing import Union, List, Dict
+from typing import Union, List, Dict, Optional
 
 import numpy
 import matplotlib.pyplot as plt
@@ -6,27 +6,32 @@ import matplotlib.pyplot as plt
 
 def plot_values(
     time_history: List[float],
-    counts: Union[numpy.ndarray, List[float], List[List[float]]]
+    counts: Union[numpy.ndarray, List[float], List[List[float]]],
+    plt_axes: Optional[plt.Axes] = None
 ):
+    if plt_axes is None:
+        _, plt_axes = plt.subplots(1, 1)
+
     counts = _sanitize_2d_numpy(counts)
-    fig, ax = plt.subplots(1, 1)
 
     for count in counts:
-        ax.plot(time_history, count)
+        plt_axes.plot(time_history, count)
 
 
 def plot_population_time(
     time_history: List[float],
-    population_history: Dict[str, List[float]]
+    population_history: Dict[str, List[float]],
+    plt_axes: Optional[plt.Axes] = None
 ):
-    fig, ax = plt.subplots(1, 1)
+    if plt_axes is None:
+        _, plt_axes = plt.subplots(1, 1)
 
     for name, history in population_history.items():
-        ax.plot(time_history, history, label=name)
+        plt_axes.plot(time_history, history, label=name)
 
-    ax.set_xbound(lower=0)
-    ax.set_ybound(lower=0)
-    ax.legend()
+    plt_axes.set_xbound(lower=0)
+    plt_axes.set_ybound(lower=0)
+    plt_axes.legend()
 
 
 def plot_population(
@@ -34,8 +39,10 @@ def plot_population(
     x_axis_name: str,
     y_axis_name: str,
     reduce_factor: int = 1,
+    plt_axes: Optional[plt.Axes] = None
 ):
-    fig, ax = plt.subplots(1, 1)
+    if plt_axes is None:
+        _, plt_axes = plt.subplots(1, 1)
 
     x_positions = population_history[x_axis_name]
     y_positions = population_history[y_axis_name]
@@ -46,15 +53,17 @@ def plot_population(
     x_velocity = _get_velocity(x_positions)
     y_velocity = _get_velocity(y_positions)
 
-    ax.quiver(
+    plt_axes.quiver(
         x_positions, y_positions, x_velocity, y_velocity,
         angles="xy"
     )
-    ax.set_xlabel(f"{x_axis_name} population")
-    ax.set_ylabel(f"{y_axis_name} population")
-    ax.set_xbound(lower=0)
-    ax.set_ybound(lower=0)
-    ax.axis("equal")
+    plt_axes.set_xlabel(f"{x_axis_name} population")
+    plt_axes.set_ylabel(f"{y_axis_name} population")
+    plt_axes.set_xbound(lower=0)
+    plt_axes.set_ybound(lower=0)
+    plt_axes.axis("equal")
+
+    return plt_axes
 
 
 def show_plot():

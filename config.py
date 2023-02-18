@@ -1,7 +1,7 @@
 import numpy
 
 
-class BaseConfig:
+class Config:
     # environment arguments
     environment_update_period = 2.0
     drought_state = 0
@@ -20,9 +20,10 @@ class BaseConfig:
     # simulation arguments
     seed = 42
     simulation_h = 0.001
-    max_time = 10.0
+    max_time = 1.0
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
         numpy.fill_diagonal(self.interactions, self.damping)
 
         self.check_arguments()
