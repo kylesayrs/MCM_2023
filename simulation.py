@@ -12,8 +12,8 @@ class Simulation:
         simulation_h: Optional[float] = None,
         environment_update_period: float = 1.0,
     ):
-        self.environment_variables = environment_variables.copy()
-        self.population_variables = population_variables.copy()
+        self.environment_variables = environment_variables
+        self.population_variables = population_variables
         self.simulation_h = simulation_h
         self.environment_update_period = environment_update_period
 

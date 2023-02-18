@@ -28,21 +28,29 @@ def plot_population_time(
 
 
 def plot_population(
-    time_history: List[float],
     population_history: Dict[str, List[float]],
     x_axis_name: str,
-    y_axis_name: str
+    y_axis_name: str,
+    reduce_factor: int = 1,
 ):
     fig, ax = plt.subplots(1, 1)
 
-    x_velocity = _get_velocity(population_history[x_axis_name])
-    y_velocity = _get_velocity(population_history[y_axis_name])
+    x_positions = population_history[x_axis_name]
+    y_positions = population_history[y_axis_name]
+
+    x_positions = [position for index, position in enumerate(x_positions) if index % reduce_factor == 0]
+    y_positions = [position for index, position in enumerate(y_positions) if index % reduce_factor == 0]
+
+    x_velocity = _get_velocity(x_positions)
+    y_velocity = _get_velocity(y_positions)
 
     ax.quiver(
-        population_history[x_axis_name], population_history[y_axis_name],
-        x_velocity, y_velocity,
+        x_positions, y_positions, x_velocity, y_velocity,
         angles="xy"
     )
+    ax.set_xlabel(f"{x_axis_name} population")
+    ax.set_ylabel(f"{y_axis_name} population")
+    ax.set_aspect("equal", "box")
 
 
 def show_plot():
@@ -55,6 +63,7 @@ def _sanitize_2d_numpy(array_input):
         array = numpy.array([array])
 
     return array
+
 
 def _get_velocity(positions: List[float]):
     return [0.0] + [

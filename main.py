@@ -14,26 +14,27 @@ if __name__ == "__main__":
     numpy.random.seed(config.seed)
 
     # create population variables
-    population_variables = {}
-    population_variables["plant_x"] = PopulationVariable(f"plant_x", 30.0)
-    population_variables["plant_y"] = PopulationVariable(f"plant_y", 30.0)
+    populations = {
+        "plant_x": PopulationVariable(f"plant_x", 1.0),
+        "plant_y": PopulationVariable(f"plant_y", 1.0)
+    }
 
-    population_variables["plant_x"].ddt = (
+    populations["plant_x"].ddt = (
         lambda:
-        0.3 * population_variables["plant_x"].value +
-        (numpy.array([0, -0.01]) @ numpy.array([var.value for var in population_variables.values()])) * population_variables["plant_x"].value
+        4.0 * populations["plant_x"].value +
+        (numpy.array([0, -2.0]) @ numpy.array([var.value for var in populations.values()])) * populations["plant_x"].value
     )
-    population_variables["plant_y"].ddt = (
+    populations["plant_y"].ddt = (
         lambda:
-        0.05 * population_variables["plant_y"].value +
-        (numpy.array([0.01, 0]) @ numpy.array([var.value for var in population_variables.values()])) * population_variables["plant_y"].value
+        -3.0 * populations["plant_y"].value +
+        (numpy.array([1.0, 0]) @ numpy.array([var.value for var in populations.values()])) * populations["plant_y"].value
     )
 
     # create simulation
     simulation = Simulation(
         environment_variables={},
-        population_variables=population_variables,
-        simulation_h=0.1,
+        population_variables=populations,
+        simulation_h=0.0001,
     )
 
     # run simulation
@@ -46,8 +47,8 @@ if __name__ == "__main__":
     )
     show_plot()
     plot_population(
-        simulation.time_history,
         simulation.population_history,
-        "plant_x", "plant_y"
+        "plant_x", "plant_y",
+        reduce_factor=1000
     )
     show_plot()
