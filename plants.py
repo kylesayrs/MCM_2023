@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 
 import numpy
 
@@ -46,7 +46,7 @@ def make_plant_population_variables(
                     _interactions[_variable_i] @
                     numpy.array([var.value for var in variables.values()]) *
                     _variable.value
-            ) +
+            )
         )
 
     return variables

@@ -29,10 +29,11 @@ if __name__ == "__main__":
         environment_variables=environment_variables,
         population_variables=population_variables,
         simulation_h=config.simulation_h,
+        environment_update_period=config.environment_update_period,
     )
 
     # run simulation
-    simulation.run(max_time=1)
+    simulation.run(max_time=10)
 
     # visualize
     plot_population_time(
