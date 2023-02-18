@@ -13,20 +13,21 @@ if __name__ == "__main__":
     numpy.random.seed(config.seed)
 
     # create population variables
-    initial = numpy.array([1.0, 1.0])
-    growth = numpy.array([4.0, -3.0])
-    interactions = numpy.array([[0.0, -2.0], [1.0, 0.0]])
+    initial = numpy.array([7.0, 6.0])
+    growth = numpy.array([4.0, 3.0])
+    interactions = numpy.array([[0.0, -2.0],
+                                [-1.0, 0.0]])
     populations = make_plant_population_variables(2, initial, growth, interactions)
 
     # create simulation
     simulation = Simulation(
         environment_variables={},
         population_variables=populations,
-        simulation_h=0.0001,
+        simulation_h=0.00001,
     )
 
     # run simulation
-    simulation.run(max_time=10)
+    simulation.run(max_time=1)
 
     # visualize
     plot_population_time(

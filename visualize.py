@@ -24,6 +24,8 @@ def plot_population_time(
     for name, history in population_history.items():
         ax.plot(time_history, history, label=name)
 
+    ax.set_xbound(lower=0)
+    ax.set_ybound(lower=0)
     ax.legend()
 
 
@@ -50,7 +52,9 @@ def plot_population(
     )
     ax.set_xlabel(f"{x_axis_name} population")
     ax.set_ylabel(f"{y_axis_name} population")
-    ax.set_aspect("equal", "box")
+    ax.set_xbound(lower=0)
+    ax.set_ybound(lower=0)
+    ax.axis("equal")
 
 
 def show_plot():
