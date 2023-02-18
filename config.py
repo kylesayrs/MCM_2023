@@ -6,7 +6,7 @@ class BaseConfig:
     environment_update_period = 2.0
     drought_state = 0
     drought_names = ["no drought", "drought"]
-    drought_transitions = numpy.array([[0.95, 0.05],
+    drought_transitions = numpy.array([[0.5, 0.5],
                                        [0.1, 0.9]])
 
     # population arguments
@@ -19,7 +19,8 @@ class BaseConfig:
 
     # simulation arguments
     seed = 42
-    simulation_h = 0.00001
+    simulation_h = 0.001
+    max_time = 10.0
 
     def __init__(self):
         numpy.fill_diagonal(self.interactions, self.damping)

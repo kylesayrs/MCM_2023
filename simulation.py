@@ -1,7 +1,9 @@
 from typing import List, Dict, Any, Optional
 
+from config import BaseConfig
 from population_variable import PopulationVariable
 from smc import StochasticMarkovChain
+from plants import make_plant_environment_variables, make_plant_population_variables
 
 
 class Simulation:
@@ -30,8 +32,31 @@ class Simulation:
 
 
     @classmethod
-    def from_config(cls, config):
-        raise NotImplementedError()
+    def from_config(cls, config: BaseConfig):
+        # environment variables
+        environment_variables = make_plant_environment_variables(
+            config.drought_state,
+            config.drought_names,
+            config.drought_transitions,
+            config.seed,
+        )
+
+        # create population variables
+        population_variables = make_plant_population_variables(
+            config.num_species,
+            config.initial,
+            config.growth,
+            config.interactions,
+            environment_variables,
+        )
+
+        # create simulation
+        return cls(
+            environment_variables=environment_variables,
+            population_variables=population_variables,
+            simulation_h=config.simulation_h,
+            environment_update_period=config.environment_update_period,
+        )
 
 
     @staticmethod
@@ -70,7 +95,7 @@ class Simulation:
         self.time_history.append(self.time_history[-1] + self.simulation_h)
 
 
-    def run(self, max_time: int = 1000):
+    def run(self, max_time: float = 1000.0):
         max_simulation_steps = int(max_time / self.simulation_h)
         for simulation_step_i in range(max_simulation_steps):
             self.step_and_update()

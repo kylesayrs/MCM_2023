@@ -8,32 +8,9 @@ if __name__ == "__main__":
     # set up configuration
     config = BaseConfig()
 
-    # environment variables
-    environment_variables = make_plant_environment_variables(
-        config.drought_state,
-        config.drought_names,
-        config.drought_transitions,
-    )
-
-    # create population variables
-    population_variables = make_plant_population_variables(
-        config.num_species,
-        config.initial,
-        config.growth,
-        config.interactions,
-        environment_variables,
-    )
-
-    # create simulation
-    simulation = Simulation(
-        environment_variables=environment_variables,
-        population_variables=population_variables,
-        simulation_h=config.simulation_h,
-        environment_update_period=config.environment_update_period,
-    )
-
-    # run simulation
-    simulation.run(max_time=10)
+    # create and run simulation
+    simulation = Simulation.from_config(config)
+    simulation.run(max_time=config.max_time)
 
     # visualize
     plot_population_time(

@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 import numpy
 
@@ -10,12 +10,14 @@ def make_plant_environment_variables(
     drought_state: int,
     drought_names: List[str],
     drought_transitions: numpy.ndarray,
+    seed: Optional[int] = None,
 ):
     return {
         "drought": StochasticMarkovChain(
             drought_state,
             drought_names,
             drought_transitions,
+            seed,
         )
     }
 
@@ -43,10 +45,14 @@ def make_plant_population_variables(
             lambda _variable_i=variable_i, _variable=variable:
             _growth[_variable_i] * _variable.value +
             (
-                    _interactions[_variable_i] @
-                    numpy.array([var.value for var in variables.values()]) *
-                    _variable.value
+                _interactions[_variable_i] @
+                numpy.array([var.value for var in variables.values()]) *
+                _variable.value
+            ) +
+            (
+                numpy.array([0.0, -1000])
             )
+            @ environment_variables["drought"].one_hot
         )
 
     return variables
