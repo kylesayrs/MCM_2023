@@ -95,7 +95,14 @@ class Simulation:
         self.time_history.append(self.time_history[-1] + self.simulation_h)
 
 
-    def run(self, max_time: float = 1000.0):
+    def run(
+        self,
+        max_time: float = 1000.0,
+        progress: Optional["tqdm.progress"] = None
+    ):
         max_simulation_steps = int(max_time / self.simulation_h)
         for simulation_step_i in range(max_simulation_steps):
             self.step_and_update()
+
+        if progress is not None:
+            progress.update(1)
