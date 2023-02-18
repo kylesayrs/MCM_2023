@@ -1,5 +1,3 @@
-import matplotlib.pyplot as plt
-
 from config import Config
 from simulation import Simulation
 from visualize import plot_population_time, plot_population, show_plot

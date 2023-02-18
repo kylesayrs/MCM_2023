@@ -18,7 +18,8 @@ def run_simulations(seed=42):
         simulations = []
         progress = tqdm.tqdm(total=50)
 
-        for initial in local_rand.uniform(0.0, 7.0, (50, 2)):
+        # species
+        for initial in local_rand.uniform(0.0, 50.0, (50, 2)):
             config = Config(initial=initial)
             simulation = Simulation.from_config(config)
             future = executor.submit(simulation.run, config.max_time, progress)
@@ -27,12 +28,12 @@ def run_simulations(seed=42):
             futures.append(future)
 
     # visualize diffeq
-    _, plt_axes = plt.subplots(1, 1)
+    _, axes = plt.subplots(1, 1)
     for simulation in simulations:
         plot_population(
             simulation.population_history,
             "plant_0", "plant_1",
             reduce_factor=20,
-            plt_axes=plt_axes
+            axes=axes
         )
     show_plot()

@@ -3,7 +3,7 @@ from typing import List, Dict, Any, Optional
 import numpy
 
 from config import Config
-from smc import StochasticMarkovChain
+from environment_variable import StochasticMarkovChain
 from population_variable import PopulationVariable
 
 

@@ -2,7 +2,7 @@ from typing import List, Dict, Any, Optional
 
 from config import Config
 from population_variable import PopulationVariable
-from smc import StochasticMarkovChain
+from environment_variable import StochasticMarkovChain
 from plants import make_plant_environment_variables, make_plant_population_variables
 
 
