@@ -13,19 +13,18 @@ if __name__ == "__main__":
     numpy.random.seed(config.seed)
 
     # create population variables
-    initial = numpy.array([7.0, 6.0])
-    growth = numpy.array([4.0, 3.0])
-    damping = -0.001
-    interactions = numpy.array([[None, -2.0],
-                                [-1.0, None]])
-    numpy.fill_diagonal(interactions, damping)
-    populations = make_plant_population_variables(2, initial, growth, interactions)
+    populations = make_plant_population_variables(
+        config.num_species,
+        config.initial,
+        config.growth,
+        config.interactions,
+    )
 
     # create simulation
     simulation = Simulation(
         environment_variables={},
         population_variables=populations,
-        simulation_h=0.00001,
+        simulation_h=config.simulation_h,
     )
 
     # run simulation
