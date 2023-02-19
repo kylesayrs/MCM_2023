@@ -7,7 +7,7 @@ from utils import get_spans
 from simulation import Simulation
 
 
-def generate_values_dict_statistics(values_dict: Dict[str, List[float]]):
+def generate_mean_std(values_dict: Dict[str, List[float]]):
     return {
         key: {
             "mean": numpy.mean(values),
@@ -62,7 +62,7 @@ def get_simulation_statistics(simulation: Simulation, stringify: bool = False):
 
     statistics = {
         "resistance": {
-            plant_name: generate_values_dict_statistics(values_dict)
+            plant_name: generate_mean_std(values_dict)
             for plant_name, values_dict in plant_resistance_values.items()
         },
         "variability": {
@@ -76,3 +76,31 @@ def get_simulation_statistics(simulation: Simulation, stringify: bool = False):
     else:
         return statistics
 
+
+def compile_simulation_metrics(simulations: List[Simulation], stringify: bool = False):
+    simulation_statistics = [get_simulation_statistics(simulation) for simulation in simulations]
+
+    mean_resistances_dict = {
+        drought_state_name: [
+            statistics["resistance"]["total"][drought_state_name]["mean"]
+            for statistics in simulation_statistics
+        ]
+        for drought_state_name in simulation_statistics[0]["resistance"]["total"].keys()
+    }
+
+    mean_variability = [
+        statistics["variability"]["total"]
+        for statistics in simulation_statistics
+    ]
+
+    compiled_statistics = {
+        "mean_resistance": generate_mean_std(mean_resistances_dict)
+    }
+    compiled_statistics.update(
+        generate_mean_std({"mean_variability": mean_variability})
+    )
+
+    if stringify:
+        return json.dumps(compiled_statistics, indent=4)
+    else:
+        return compiled_statistics

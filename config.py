@@ -31,7 +31,7 @@ class Config:
         # simulation arguments
         self.seed = 42
         self.simulation_h = 0.01
-        self.max_time = 10.0
+        self.max_time = 100.0
 
         # custom arguments
         self.__dict__.update(kwargs)

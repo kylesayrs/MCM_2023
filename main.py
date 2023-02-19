@@ -7,7 +7,7 @@ from mulithreading import run_simulations
 from metrics import get_simulation_statistics
 
 
-def run_simulation():
+def run_single_simulation():
     # create and run simulations
     config = Config()
     simulation = Simulation.from_config(config)
@@ -35,5 +35,5 @@ def run_simulation():
 
 
 if __name__ == "__main__":
-    run_simulation()
-    #run_simulations()
+    #run_simulation()
+    run_simulations(20, seed=42)
