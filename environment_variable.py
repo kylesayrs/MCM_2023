@@ -18,7 +18,7 @@ class StochasticMarkovChain:
         self.state_names = state_names
         self.transitions = numpy.array(transitions)
         self.local_random = numpy.random.RandomState(seed)
-        assert numpy.all(numpy.sum(transitions, axis=1) == 1.0)
+        assert numpy.all(numpy.sum(transitions, axis=1).astype(numpy.float32) == 1.0)
 
         self.state_index = self.initial_state_index
         self.new_value = None

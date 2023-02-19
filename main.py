@@ -1,7 +1,10 @@
+import numpy
+
 from config import Config
 from simulation import Simulation
 from visualize import plot_population_time, plot_population, show_plot
 from mulithreading import run_simulations
+from metrics import get_simulation_statistics
 
 
 def run_simulation():
@@ -9,6 +12,10 @@ def run_simulation():
     config = Config()
     simulation = Simulation.from_config(config)
     simulation.run(config.max_time)
+
+    # print simulation statistics
+    simulation_statistics = get_simulation_statistics(simulation, stringify=True)
+    print(simulation_statistics)
 
     # visualize population
     plot_population_time(
