@@ -16,7 +16,7 @@ def run_single_simulation(config_args: Dict[str, Any]):
     simulation.run(config.max_time)
 
     # print config
-    print(config)
+    #  print(config)
 
     # print simulation statistics
     simulation_statistics = get_simulation_statistics(simulation, stringify=True)

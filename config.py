@@ -11,7 +11,7 @@ class Config:
         local_rand = numpy.random.RandomState(self.seed)
 
         # environment arguments
-        self.environment_update_period = 0.1  # period over time
+        self.environment_update_period = 2.0  # period over time
         self.drought_state = 0
         self.drought_names = ["none", "mild", "severe"]
         self.drought_transitions = numpy.array([[0.90, 0.05, 0.05],
@@ -21,14 +21,13 @@ class Config:
         # base population arguments
         self.num_plants = num_plants
         self.initial = numpy.array([100 / self.num_plants] * self.num_plants)
-        self.growth = local_rand.normal(
-            0.3, 0.05, (self.num_plants,)
-        )
+        self.growth = local_rand.normal(0.3, 0.05, (self.num_plants,))
         self.growth[self.growth < 0.0] = 0.0  # enforce positivity
         self.damping = -0.01  # should be greater magnitude than interactions
-        self.interactions = local_rand.normal(
+        self.interactions = self.interactions = local_rand.normal(
             -0.0003, 0.0012, (self.num_plants, self.num_plants)
-        )  # damping on diagonal
+        )
+        numpy.fill_diagonal(self.interactions, self.damping)
 
         # mild drought effects
         self.mild_growth_effect = -0.9 * self.growth
@@ -36,7 +35,7 @@ class Config:
 
         # severe drought effects
         self.severe_growth_effect = -1.5 * self.growth
-        self.severe_interactions_effect = 4.0 * self.interactions
+        self.severe_interactions_effect = 3.0 * self.interactions
 
         # simulation arguments
         self.simulation_h = 0.01
@@ -45,8 +44,7 @@ class Config:
         # custom arguments
         self.__dict__.update(kwargs)
 
-        # augmentations
-        numpy.fill_diagonal(self.interactions, self.damping)
+        # check arguments
         self.check_arguments()
 
 
