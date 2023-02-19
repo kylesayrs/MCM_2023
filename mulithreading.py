@@ -1,3 +1,5 @@
+from typing import Dict, Any
+
 import tqdm
 import numpy
 from concurrent.futures import ThreadPoolExecutor
@@ -9,7 +11,7 @@ from visualize import plot_population, show_plot
 from metrics import compile_simulation_metrics
 
 
-def run_simulations(num_runs: int, seed: int = 42):
+def run_experiments(num_runs: int, config_args: Dict[str, Any], seed: int = 42):
     # create and run simulations
     with ThreadPoolExecutor(max_workers=None) as executor:
         futures = []
@@ -19,7 +21,7 @@ def run_simulations(num_runs: int, seed: int = 42):
         # species
         local_rand = numpy.random.RandomState(seed)
         for run_i in range(num_runs):
-            config = Config(seed=local_rand.randint(0, 1 << 32))
+            config = Config(**config_args, seed=local_rand.randint(0, 1 << 32))
             simulation = Simulation.from_config(config)
             future = executor.submit(simulation.run, config.max_time, progress)
             simulations.append(simulation)
@@ -29,6 +31,7 @@ def run_simulations(num_runs: int, seed: int = 42):
     print(simulations_statistics)
 
     # visualize diffeq
+    """
     _, axes = plt.subplots(1, 1)
     for simulation in simulations:
         plot_population(
@@ -38,3 +41,6 @@ def run_simulations(num_runs: int, seed: int = 42):
             axes=axes
         )
     show_plot()
+    """
+
+    return simulations

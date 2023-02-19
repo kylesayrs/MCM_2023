@@ -53,6 +53,11 @@ def get_simulation_statistics(simulation: Simulation, stringify: bool = False):
         for plant_name, plant_history in population_histories_with_total.items()
     }
 
+    plant_mean_values = {
+        plant_name: numpy.mean(population_histories_with_total[plant_name])
+        for plant_name, plant_history in population_histories_with_total.items()
+    }
+
     plant_variability_values = {
         plant_name: get_variability(
             population_histories_with_total[plant_name]
@@ -61,14 +66,15 @@ def get_simulation_statistics(simulation: Simulation, stringify: bool = False):
     }
 
     statistics = {
-        "resistance": {
+        "population_resistance": {
             plant_name: generate_mean_std(values_dict)
             for plant_name, values_dict in plant_resistance_values.items()
         },
-        "variability": {
+        "population_variability": {
             plant_name: variability
             for plant_name, variability in plant_variability_values.items()
-        }
+        },
+        "population_mean": plant_mean_values
     }
 
     if stringify:
@@ -82,22 +88,30 @@ def compile_simulation_metrics(simulations: List[Simulation], stringify: bool = 
 
     mean_resistances_dict = {
         drought_state_name: [
-            statistics["resistance"]["total"][drought_state_name]["mean"]
+            statistics["population_resistance"]["total"][drought_state_name]["mean"]
             for statistics in simulation_statistics
         ]
-        for drought_state_name in simulation_statistics[0]["resistance"]["total"].keys()
+        for drought_state_name in simulation_statistics[0]["population_resistance"]["total"].keys()
     }
 
-    mean_variability = [
-        statistics["variability"]["total"]
+    means = [
+        statistics["population_mean"]["total"]
+        for statistics in simulation_statistics
+    ]
+
+    variabilities = [
+        statistics["population_variability"]["total"]
         for statistics in simulation_statistics
     ]
 
     compiled_statistics = {
-        "mean_resistance": generate_mean_std(mean_resistances_dict)
+        "mean_resistance": generate_mean_std(mean_resistances_dict),
     }
     compiled_statistics.update(
-        generate_mean_std({"mean_variability": mean_variability})
+        generate_mean_std({"population_variability": variabilities})
+    )
+    compiled_statistics.update(
+        generate_mean_std({"population_means": means})
     )
 
     if stringify:
