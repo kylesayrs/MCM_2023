@@ -14,9 +14,11 @@ class Config:
         self.environment_update_period = 2.0  # period over time
         self.drought_state = 0
         self.drought_names = ["none", "mild", "severe"]
-        self.drought_transitions = numpy.array([[0.90, 0.05, 0.05],
-                                                [0.25, 0.50, 0.25],
-                                                [0.25, 0.25, 0.50]])
+        # based on massachusetts 2022 drought data
+        numpy.array([[0.944, 0.056, 0.0],
+                     [0.0952, 0.857, 0.0478],
+                     [0.0, 0.4, 0.6]])
+
 
         # base population arguments
         self.num_plants = num_plants
