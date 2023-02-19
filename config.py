@@ -19,7 +19,6 @@ class Config:
                      [0.0952, 0.857, 0.0478],
                      [0.0, 0.4, 0.6]])
 
-
         # base population arguments
         self.num_plants = num_plants
         self.initial = numpy.array([100 / self.num_plants] * self.num_plants)
