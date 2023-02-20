@@ -115,4 +115,5 @@ def plot_statistics(
 
 
 def show_plot():
+    plt.savefig("species_recovery")
     plt.show()
