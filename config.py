@@ -45,41 +45,9 @@ class Config:
             -0.0007, 0.00012, (self.num_plants, self.num_plants)
         )
 
-        # extreme competition
-        '''
-        self.interactions = self.interactions = local_rand.normal(
-                    -0.01, 0.00012, (self.num_plants, self.num_plants)
-                )
-        '''
-
-       # parasitic
-        '''
-       self.interactions = self.interactions = local_rand.normal(
-                   -0.000001, 0.0002, (self.num_plants, self.num_plants)
-               )
-        '''
-
-       # symbiotic
-        '''
-       i_val = random.randint(1,num_plants-1)
-       j_val = random.randint(1, num_plants-1)
-
-       while i_val == j_val:
-            j_val = random.randint(1, num_plants-1)
-
-       self.interactions = self.interactions = local_rand.normal(
-                   -0.0007, 0.00012, (self.num_plants, self.num_plants)
-               )
-
-       self.interactions[i][j] = local_rand.normal(0.0007, 0.00012)
-       self.interactions[j][i] = local_rand.normal(0.0007, 0.00012)
-
-        '''
-        
-        
         numpy.fill_diagonal(self.interactions, self.damping)
         self.population_limit = 200.0
-        self.population_limit_change = -1 * self.population_limit * 0.3 / self.max_time * self.environment_update_period
+        self.population_limit_change = -1 * self.population_limit * 0.1 / self.max_time * self.environment_update_period
 
         # mild drought effects
         self.mild_growth_effect = -0.9 * self.growth

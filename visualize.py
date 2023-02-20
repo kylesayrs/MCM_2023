@@ -96,6 +96,7 @@ def plot_population(
 def plot_statistics(
     x_values: List[float],
     y_values: List[List[float]],
+    y_errs: List[List[float]],
     x_axis_label: str,
     y_axis_label: str,
     labels: List[str],
@@ -106,8 +107,8 @@ def plot_statistics(
 
     assert len(y_values) == len(labels)
 
-    for y_value, label in zip(y_values, labels):
-        axes.plot(x_values, y_value, label=label)
+    for y_value, y_err, label in zip(y_values, y_errs, labels):
+        axes.errorbar(x_values, y_value, y_err, label=label)
 
     axes.set_xlabel(x_axis_label)
     axes.set_ylabel(y_axis_label)

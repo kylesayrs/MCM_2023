@@ -43,12 +43,13 @@ def run_single_simulation(config_args: Dict[str, Any]):
 
 
 if __name__ == "__main__":
-    #run_single_simulation({"num_plants": 20, "pollution_step_size": 0.0})
+    #run_single_simulation({"num_plants": 2, "seed": 36})
+    #exit(0)
 
-    x_values = list(range(1, 26, 5))
+    x_values = list(range(1, 26, 1))
     y_values = []
     for num_plants in x_values:
-        simulations = run_experiments(2, {"num_plants": num_plants}, seed=42)
+        simulations = run_experiments(20, {"num_plants": num_plants}, seed=42)
         results = compile_simulation_metrics(simulations)
         y_values.append(results["mean_recovery_rate"])
 
@@ -61,6 +62,16 @@ if __name__ == "__main__":
             ],
             [
                 y_value["severe"]["mean"]
+                for y_value in y_values
+            ],
+        ],
+        [
+            [
+                y_value["mild"]["std"]
+                for y_value in y_values
+            ],
+            [
+                y_value["severe"]["std"]
                 for y_value in y_values
             ],
         ],
