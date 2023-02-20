@@ -42,6 +42,6 @@ def run_single_simulation(config_args: Dict[str, Any]):
 
 
 if __name__ == "__main__":
-    run_single_simulation({"num_plants": 2})
-    #simulations = run_experiments(20, {"num_plants": 20}, seed=42)
+    #run_single_simulation({"num_plants": 2})
+    simulations = run_experiments(2, {"num_plants": 2}, seed=42, save_file_path="./results.json")
 

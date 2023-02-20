@@ -75,12 +75,16 @@ class Config:
 
 
     def __str__(self):
+        return json.dumps(self.json(), indent=4)
+
+
+    def json(self):
         tmp = self.__dict__.copy()
         for key in tmp:
             if type(tmp[key]) == numpy.ndarray:
                 tmp[key] = tmp[key].tolist()
-        return json.dumps(tmp, indent=4)
 
+        return tmp
 
     def copy(self):
         return Config(**self.__dict__)

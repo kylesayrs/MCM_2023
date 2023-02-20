@@ -1,5 +1,6 @@
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
+import json
 import tqdm
 import numpy
 from concurrent.futures import ThreadPoolExecutor
@@ -11,7 +12,12 @@ from visualize import plot_population, show_plot
 from metrics import compile_simulation_metrics
 
 
-def run_experiments(num_runs: int, config_args: Dict[str, Any], seed: int = 42):
+def run_experiments(
+    num_runs: int,
+    config_args: Dict[str, Any],
+    seed: int = 42,
+    save_file_path: Optional[str] = None,
+):
     # create and run simulations
     with ThreadPoolExecutor(max_workers=None) as executor:
         futures = []
@@ -27,8 +33,7 @@ def run_experiments(num_runs: int, config_args: Dict[str, Any], seed: int = 42):
             simulations.append(simulation)
             futures.append(future)
 
-    simulations_statistics = compile_simulation_metrics(simulations, stringify=True)
-    print(simulations_statistics)
+    simulations_statistics = compile_simulation_metrics(simulations)
 
     # visualize diffeq
     """
@@ -42,5 +47,16 @@ def run_experiments(num_runs: int, config_args: Dict[str, Any], seed: int = 42):
         )
     show_plot()
     """
+
+    if save_file_path is not None:
+        with open(save_file_path, "w") as file:
+            json.dump(
+                {
+                    "config": Config(**config_args).json(),
+                    "statistics": simulations_statistics,
+                },
+                file,
+                indent=4,
+            )
 
     return simulations

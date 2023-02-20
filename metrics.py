@@ -138,6 +138,14 @@ def compile_simulation_metrics(simulations: List[Simulation], stringify: bool = 
         for drought_state_name in simulation_statistics[0]["population_resistance"]["total"].keys()
     }
 
+    mean_recovery_rate_dict = {
+        drought_state_name: [
+            statistics["population_recovery_rate"]["total"][drought_state_name]["mean"]
+            for statistics in simulation_statistics
+        ]
+        for drought_state_name in simulation_statistics[0]["population_recovery_rate"]["total"].keys()
+    }
+
     means = [
         statistics["population_mean"]["total"]
         for statistics in simulation_statistics
@@ -150,6 +158,7 @@ def compile_simulation_metrics(simulations: List[Simulation], stringify: bool = 
 
     compiled_statistics = {
         "mean_resistance": generate_mean_std(mean_resistances_dict),
+        "mean_recovery_rate": generate_mean_std(mean_recovery_rate_dict),
     }
     compiled_statistics.update(
         generate_mean_std({"population_variability": variabilities})
