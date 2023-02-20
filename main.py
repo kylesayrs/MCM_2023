@@ -4,9 +4,10 @@ import numpy
 
 from config import Config
 from simulation import Simulation
-from visualize import plot_population_time, plot_population, show_plot
+from visualize import plot_population_time, plot_population, show_plot, plot_statistics
 from mulithreading import run_experiments
 from metrics import get_simulation_statistics
+from metrics import compile_simulation_metrics
 
 
 def run_single_simulation(config_args: Dict[str, Any]):
@@ -42,6 +43,30 @@ def run_single_simulation(config_args: Dict[str, Any]):
 
 
 if __name__ == "__main__":
-    run_single_simulation({"num_plants": 20, "pollution_step_size": 0.0})
-    #simulations = run_experiments(20, {"num_plants": 2}, seed=42, save_file_path="./results.json")
+    #run_single_simulation({"num_plants": 20, "pollution_step_size": 0.0})
+
+    x_values = list(range(1, 26, 5))
+    y_values = []
+    for num_plants in x_values:
+        simulations = run_experiments(2, {"num_plants": num_plants}, seed=42)
+        results = compile_simulation_metrics(simulations)
+        y_values.append(results["mean_recovery_rate"])
+
+    plot_statistics(
+        x_values,
+        [
+            [
+                y_value["mild"]["mean"]
+                for y_value in y_values
+            ],
+            [
+                y_value["severe"]["mean"]
+                for y_value in y_values
+            ],
+        ],
+        "Number of Plant Species",
+        "Recovery Rate",
+        ["mild", "severe"],
+    )
+    show_plot()
 

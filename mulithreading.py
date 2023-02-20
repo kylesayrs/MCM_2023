@@ -33,8 +33,6 @@ def run_experiments(
             simulations.append(simulation)
             futures.append(future)
 
-    simulations_statistics = compile_simulation_metrics(simulations)
-
     # visualize diffeq
     """
     _, axes = plt.subplots(1, 1)
@@ -53,7 +51,7 @@ def run_experiments(
             json.dump(
                 {
                     "config": Config(**config_args).json(),
-                    "statistics": simulations_statistics,
+                    "statistics": compile_simulation_metrics(simulations),
                 },
                 file,
                 indent=4,

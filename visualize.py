@@ -93,5 +93,26 @@ def plot_population(
     return axes
 
 
+def plot_statistics(
+    x_values: List[float],
+    y_values: List[List[float]],
+    x_axis_label: str,
+    y_axis_label: str,
+    labels: List[str],
+    axes: Optional[plt.Axes] = None
+):
+    if axes is None:
+        _, axes = plt.subplots(1, 1)
+
+    assert len(y_values) == len(labels)
+
+    for y_value, label in zip(y_values, labels):
+        axes.plot(x_values, y_value, label=label)
+
+    axes.set_xlabel(x_axis_label)
+    axes.set_ylabel(y_axis_label)
+    axes.legend()
+
+
 def show_plot():
     plt.show()
