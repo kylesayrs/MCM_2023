@@ -20,7 +20,7 @@ def run_single_simulation(config_args: Dict[str, Any]):
 
     # print simulation statistics
     simulation_statistics = get_simulation_statistics(simulation, stringify=True)
-    print(simulation_statistics)
+    #print(simulation_statistics)
 
     # visualize population
     plot_population_time(
@@ -31,12 +31,14 @@ def run_single_simulation(config_args: Dict[str, Any]):
     show_plot()
 
     # visualize diffeq
+    """
     plot_population(
         simulation.population_history,
         "plant_0", "plant_1",
         reduce_factor=1,
     )
     show_plot()
+    """
 
 
 if __name__ == "__main__":

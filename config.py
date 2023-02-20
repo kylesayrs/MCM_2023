@@ -6,18 +6,33 @@ import numpy
 
 class Config:
     def __init__(self, seed: Optional[int] = 42, num_plants: int = 2, **kwargs):
-        # config seed
+        # config and simulation seed
         self.seed = seed
         local_rand = numpy.random.RandomState(self.seed)
 
+        # simulation arguments
+        self.simulation_h = 0.01
+        self.max_time = 100.0
+
         # environment arguments
-        self.environment_update_period = 2.0  # period over time
+        self.environment_update_period = 0.1  # period over time
         self.drought_state = 0
         self.drought_names = ["none", "mild", "severe"]
         # based on massachusetts 2022 drought data
-        numpy.array([[0.944, 0.056, 0.0],
-                     [0.0952, 0.857, 0.0478],
-                     [0.0, 0.4, 0.6]])
+        self.drought_transitions = numpy.array([[0.944, 0.056, 0.0],
+                                                [0.0952, 0.857, 0.0478],
+                                                [0.0, 0.4, 0.6]])
+        self.pollution_state = 0.0
+        self.pollution_bounds = (0.0, 1.0)
+        self.pollution_step_size = (
+            min(self.drought_transitions[0:2][:, 0]) /
+            self.max_time *
+            self.environment_update_period
+        )
+        self.pollution_drought_effect = numpy.array([[-1, 0.75, 0.25],
+                                                     [-1, 0.75, 0.25],
+                                                     [0.0, 0.0, 0.0]])
+        self.pollution_growth_factor = -1.0
 
         # base population arguments
         self.num_plants = num_plants
@@ -29,6 +44,7 @@ class Config:
             -0.0003, 0.0012, (self.num_plants, self.num_plants)
         )
         numpy.fill_diagonal(self.interactions, self.damping)
+        self.population_limit = 200.0
 
         # mild drought effects
         self.mild_growth_effect = -0.9 * self.growth
@@ -37,10 +53,6 @@ class Config:
         # severe drought effects
         self.severe_growth_effect = -1.5 * self.growth
         self.severe_interactions_effect = 3.0 * self.interactions
-
-        # simulation arguments
-        self.simulation_h = 0.01
-        self.max_time = 100.0
 
         # custom arguments
         self.__dict__.update(kwargs)
@@ -57,6 +69,9 @@ class Config:
             self.interactions.shape[0] ==
             self.interactions.shape[1]
         )
+
+        assert numpy.all(numpy.sum(self.drought_transitions, axis=1).astype(numpy.float32) == 1.0)
+        assert numpy.all(numpy.sum(self.pollution_drought_effect, axis=1).astype(numpy.float32) == 0.0)
 
 
     def __str__(self):

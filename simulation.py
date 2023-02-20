@@ -11,11 +11,13 @@ class Simulation:
         self,
         environment_variables: Dict[str, StochasticMarkovChain],
         population_variables: Dict[str, PopulationVariable],
+        population_limit: Optional[float] = None,
         simulation_h: Optional[float] = None,
         environment_update_period: float = 1.0,
     ):
         self.environment_variables = environment_variables
         self.population_variables = population_variables
+        self.population_limit = population_limit
         self.simulation_h = simulation_h
         self.environment_update_period = environment_update_period
 
@@ -34,12 +36,7 @@ class Simulation:
     @classmethod
     def from_config(cls, config: Config):
         # environment variables
-        environment_variables = make_plant_environment_variables(
-            config.drought_state,
-            config.drought_names,
-            config.drought_transitions,
-            config.seed,
-        )
+        environment_variables = make_plant_environment_variables(config)
 
         # create population variables
         population_variables = make_plant_population_variables(
@@ -51,6 +48,7 @@ class Simulation:
         return cls(
             environment_variables=environment_variables,
             population_variables=population_variables,
+            population_limit=config.population_limit,
             simulation_h=config.simulation_h,
             environment_update_period=config.environment_update_period,
         )
@@ -85,6 +83,15 @@ class Simulation:
             self.t_buffer -= self.environment_update_period
 
         self.step_variables(self.population_variables, self.simulation_h)
+        if self.population_limit is not None:
+            population_variables = self.population_variables.values()
+            new_total_population = sum([variable.new_value for variable in population_variables])
+            population_overshoot = new_total_population - self.population_limit
+            if population_overshoot > 0.0:
+                average_overshoot_per_species = population_overshoot / len(population_variables)
+                for variable in self.population_variables.values():
+                    variable.new_value -= average_overshoot_per_species
+
         self.update_variables(self.population_variables)
 
         self.update_history(self.environment_history, self.environment_variables)

@@ -1,6 +1,38 @@
-from typing import Union, List, Optional
+from typing import Union, List, Optional, Tuple
 
 import numpy
+
+
+class RandomWalk:
+    def __init__(
+        self,
+        initial_state: float,
+        bounds: Tuple[float, float],
+        step_size: float,
+        seed: Optional[int] = None
+    ):
+        self.state = initial_state
+        self.bounds = bounds
+        self.step_size = step_size
+        self.local_random = numpy.random.RandomState(seed)
+
+        self.new_value = None
+
+
+    def step(self):
+        self.new_value = self.state + self.step_size * numpy.random.choice([-1, 1])
+        self.new_value = min(max(self.new_value, self.bounds[0]), self.bounds[1])
+        return self.new_value
+
+
+    def update(self):
+        self.state = self.new_value
+        self.new_value = None
+
+
+    @property
+    def value(self):
+        return self.state
 
 
 class StochasticMarkovChain:
@@ -57,3 +89,26 @@ class StochasticMarkovChain:
 
     def __str__(self):
         return f"StochasticMarkovChain(state={self.state_name}, states={self.state_names})"
+
+
+class PollutionVariable(RandomWalk):
+    def __init__(self, drought_effect: numpy.ndarray, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.drought_effect = drought_effect
+
+
+class DroughtVariable(StochasticMarkovChain):
+    def __init__(self, pollution_variable: PollutionVariable, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.base_transitions = self.transitions.copy()
+        self.pollution_variable = pollution_variable
+
+
+    def step(self):
+        self.transitions = (
+            self.base_transitions +
+            (self.pollution_variable.value * self.pollution_variable.drought_effect)
+        )
+        super().step()

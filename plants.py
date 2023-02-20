@@ -1,9 +1,10 @@
 from typing import List, Dict, Any, Optional
 
 import numpy
+from collections import OrderedDict
 
 from config import Config
-from environment_variable import StochasticMarkovChain
+from environment_variable import PollutionVariable, DroughtVariable
 from population_variable import PopulationVariable
 
 
@@ -48,20 +49,27 @@ def plant_ddt(_config, _variable_i, _variables, _environment_variables):
         return normal_ddt + severe_ddt
 
 
-def make_plant_environment_variables(
-    drought_state: int,
-    drought_names: List[str],
-    drought_transitions: numpy.ndarray,
-    seed: Optional[int] = None,
-):
-    return {
-        "drought": StochasticMarkovChain(
-            drought_state,
-            drought_names,
-            drought_transitions,
-            seed,
-        )
-    }
+def make_plant_environment_variables(config: Config):
+    pollution_variable = PollutionVariable(
+        config.pollution_drought_effect,
+        config.pollution_state,
+        config.pollution_bounds,
+        config.pollution_step_size,
+        config.seed
+    )
+    drought_variable = DroughtVariable(
+        pollution_variable,
+        config.drought_state,
+        config.drought_names,
+        config.drought_transitions,
+        config.seed,
+    )
+
+    # since pollution affects drought, order pollution first
+    return OrderedDict({
+        "pollution": pollution_variable,
+        "drought": drought_variable,
+    })
 
 
 def make_plant_population_variables(

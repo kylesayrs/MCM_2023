@@ -28,6 +28,7 @@ def get_resistance_values(
             (
                 (plant_history[span[0]] - plant_history[span[1]]) /
                 (plant_history[span[0]] * (time_history[span[0]] - time_history[span[1]]))
+                if plant_history[span[0]] > 0.0 else 0.0
             )
             for span in drought_spans
         ]
