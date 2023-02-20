@@ -12,12 +12,14 @@ class Simulation:
         environment_variables: Dict[str, StochasticMarkovChain],
         population_variables: Dict[str, PopulationVariable],
         population_limit: Optional[float] = None,
+        population_limit_change: Optional[float] = None,
         simulation_h: Optional[float] = None,
         environment_update_period: float = 1.0,
     ):
         self.environment_variables = environment_variables
         self.population_variables = population_variables
         self.population_limit = population_limit
+        self.population_limit_change = population_limit_change
         self.simulation_h = simulation_h
         self.environment_update_period = environment_update_period
 
@@ -49,6 +51,7 @@ class Simulation:
             environment_variables=environment_variables,
             population_variables=population_variables,
             population_limit=config.population_limit,
+            population_limit_change=config.population_limit_change,
             simulation_h=config.simulation_h,
             environment_update_period=config.environment_update_period,
         )
@@ -80,6 +83,7 @@ class Simulation:
         if self.t_buffer >= self.environment_update_period:
             self.step_variables(self.environment_variables)
             self.update_variables(self.environment_variables)
+            self.population_limit += self.population_limit_change
             self.t_buffer -= self.environment_update_period
 
         self.step_variables(self.population_variables, self.simulation_h)

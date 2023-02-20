@@ -45,6 +45,7 @@ class Config:
         )
         numpy.fill_diagonal(self.interactions, self.damping)
         self.population_limit = 200.0
+        self.population_limit_change = -1 * self.population_limit * 0.3 / self.max_time * self.environment_update_period
 
         # mild drought effects
         self.mild_growth_effect = -0.9 * self.growth
