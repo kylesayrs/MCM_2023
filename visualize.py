@@ -55,7 +55,10 @@ def plot_population_time(
     axes[0].set_ybound(0)
     axes[1].set_xbound(0, time_history[-1])
     axes[1].set_ybound(0)
-    axes[1].legend()
+
+    axes[1].set_xlabel(f"time")
+    axes[0].set_ylabel(f"total population")
+    axes[1].set_ylabel(f"plant populations")
 
 
 def plot_population(

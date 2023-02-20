@@ -12,7 +12,7 @@ class Config:
 
         # simulation arguments
         self.simulation_h = 0.01
-        self.max_time = 200.0
+        self.max_time = 500.0
 
         # environment arguments
         self.environment_update_period = 0.1  # period over time
@@ -32,7 +32,6 @@ class Config:
         self.pollution_drought_effect = numpy.array([[-1, 0.75, 0.25],
                                                      [-1, 0.75, 0.25],
                                                      [0.0, 0.0, 0.0]])
-        self.pollution_growth_factor = -1.0
 
         # base population arguments
         self.num_plants = num_plants
@@ -41,7 +40,7 @@ class Config:
         self.growth[self.growth < 0.0] = 0.0  # enforce positivity
         self.damping = -0.01  # should be greater magnitude than interactions
         self.interactions = self.interactions = local_rand.normal(
-            -0.0003, 0.0012, (self.num_plants, self.num_plants)
+            -0.0007, 0.00012, (self.num_plants, self.num_plants)
         )
         numpy.fill_diagonal(self.interactions, self.damping)
         self.population_limit = 200.0
