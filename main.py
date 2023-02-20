@@ -16,11 +16,11 @@ def run_single_simulation(config_args: Dict[str, Any]):
     simulation.run(config.max_time)
 
     # print config
-    #  print(config)
+    # print(config)
 
     # print simulation statistics
     simulation_statistics = get_simulation_statistics(simulation, stringify=True)
-    #print(simulation_statistics)
+    print(simulation_statistics)
 
     # visualize population
     plot_population_time(
@@ -42,6 +42,6 @@ def run_single_simulation(config_args: Dict[str, Any]):
 
 
 if __name__ == "__main__":
-    run_single_simulation({"num_plants": 20})
+    run_single_simulation({"num_plants": 2})
     #simulations = run_experiments(20, {"num_plants": 20}, seed=42)
 

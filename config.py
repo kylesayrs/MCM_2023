@@ -12,7 +12,7 @@ class Config:
 
         # simulation arguments
         self.simulation_h = 0.01
-        self.max_time = 100.0
+        self.max_time = 200.0
 
         # environment arguments
         self.environment_update_period = 0.1  # period over time
