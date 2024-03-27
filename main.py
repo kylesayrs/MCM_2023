@@ -43,8 +43,8 @@ def run_single_simulation(config_args: Dict[str, Any]):
 
 
 if __name__ == "__main__":
-    #run_single_simulation({"num_plants": 2, "seed": 36})
-    #exit(0)
+    run_single_simulation({"num_plants": 20})
+    exit(0)
 
     x_values = list(range(1, 26, 1))
     y_values = []
@@ -80,4 +80,3 @@ if __name__ == "__main__":
         ["mild", "severe"],
     )
     show_plot()
-
